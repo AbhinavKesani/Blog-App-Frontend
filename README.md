@@ -99,3 +99,8 @@ Main endpoints:
   │ │ ├── Register.jsx # Registration form
   │ │ ├── RouteLayout.jsx # Layout wrapper
   │ │ ├── Unauthorized.jsx # 403 page
+
+
+
+ ## deployed link
+ https://frontend-alpha-nine-sd0rzv1y1b.vercel.app/
