@@ -1,16 +1,101 @@
-# React + Vite
+# Blog App - Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A blogging platform built with React, Vite, and Tailwind CSS with user authentication, article management, and role-based access control.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+##  Quick Start
 
-## React Compiler
+### Prerequisites
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Node.js (v16 or higher)
+- npm 
 
-## Expanding the ESLint configuration
+### Installation
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```bash
+# Clone the repository
+git clone <repository-url>
+cd Blog-App-FrontEnd
+
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+
+
+The app will be available at `http://localhost:5173`
+
+---
+
+##  Available Scripts
+
+```bash
+npm run dev      # Start development server with hot reload
+npm run build    # Build for production
+npm run preview  # Preview production build locally
+npm run lint     # Run ESLint code checker
+```
+
+---
+
+##  Tech Stack
+
+- **React** 19.2.0 - UI Framework
+- **Vite** 7.3.1 - Build tool & dev server
+- **React Router** 7.13.1 - Routing
+- **Tailwind CSS** 4.2.1 - Styling
+- **Zustand** 5.0.11 - State management
+- **Axios** 1.13.6 - HTTP requests
+- **React Hook Form** 7.71.2 - Form handling
+- **React Hot Toast** 2.6.0 - Notifications
+
+---
+
+##  Project Structure
+
+```
+src/
+├── components/      # React components
+├── store/          # Zustand auth store
+├── styles/         # CSS utilities
+├── assets/         # Images & fonts
+├── App.jsx         # Root component
+└── main.jsx        # Entry point
+```
+
+---
+
+##  User Roles & Features
+
+**User** - Read articles, manage profile
+**Author** - User access + Create/edit articles  
+**Admin** - Full access + Content moderation
+
+---
+
+##  API Configuration
+
+**Backend URL:** `https://blog-app-backend-v0sj.onrender.com`
+
+Main endpoints:
+
+- `POST /common-api/login` - Login
+- `POST /common-api/register` - Register
+- `GET /common-api/check-auth` - Verify session
+- `GET /api/articles` - Get all articles
+- `POST /api/articles` - Create article (Author/Admin)
+  │ │ ├── ArticleById.jsx # Single article view
+  │ │ ├── AuthorArticles.jsx # Author's article list
+  │ │ ├── AuthorDashboard.jsx # Author panel
+  │ │ ├── EditArticle.jsx # Article editor
+  │ │ ├── ErrorBoundary.jsx # Error handling wrapper
+  │ │ ├── Footer.jsx # App footer
+  │ │ ├── Header.jsx # App header/navbar
+  │ │ ├── Home.jsx # Homepage
+  │ │ ├── Login.jsx # Login form
+  │ │ ├── ProtectedRoute.jsx # Route guard component
+  │ │ ├── Register.jsx # Registration form
+  │ │ ├── RouteLayout.jsx # Layout wrapper
+  │ │ ├── Unauthorized.jsx # 403 page
