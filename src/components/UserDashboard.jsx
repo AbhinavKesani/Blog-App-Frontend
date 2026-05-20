@@ -37,7 +37,7 @@ function UserDashboard() {
     const read = async () => {
       setLoading(true);
       try {
-        const res = await axios.get("https://blog-app-backend-v0sj.onrender.com/user-api/articles", {
+        const res = await axios.get("https://blog-app-backend-dvt6.onrender.com/user-api/articles", {
           withCredentials: true,
         });
 

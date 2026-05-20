@@ -25,7 +25,7 @@ function WriteArticle() {
 
     try {
       await axios.post(
-        "https://blog-app-backend-v0sj.onrender.com/author-api/articles",
+        "https://blog-app-backend-dvt6.onrender.com/author-api/articles",
         articleObj,
         { withCredentials: true }
       );

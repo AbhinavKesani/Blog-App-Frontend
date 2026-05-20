@@ -33,7 +33,7 @@ function AuthorArticles() {
       setLoading(true);
 
       try {
-        const res = await axios.get(`https://blog-app-backend-v0sj.onrender.com/author-api/articles`, { withCredentials: true });
+        const res = await axios.get(`https://blog-app-backend-dvt6.onrender.com/author-api/articles`, { withCredentials: true });
 
         setArticles(res.data.payload);
       } catch (err) {

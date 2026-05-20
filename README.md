@@ -77,7 +77,7 @@ src/
 
 ##  API Configuration
 
-**Backend URL:** `https://blog-app-backend-v0sj.onrender.com`
+**Backend URL:** `https://blog-app-backend-dvt6.onrender.com`
 
 Main endpoints:
 
