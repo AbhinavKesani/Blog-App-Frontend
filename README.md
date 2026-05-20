@@ -103,4 +103,4 @@ Main endpoints:
 
 
  ## deployed link
- https://frontend-alpha-nine-sd0rzv1y1b.vercel.app/
+ https://frontend-alpha-nine-sd0rzv1y1b.vercel.app/updated 
