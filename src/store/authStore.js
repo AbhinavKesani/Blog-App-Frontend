@@ -1,25 +1,28 @@
 import { create } from "zustand";
 import axios from "axios";
 
+const BASE_URL = "https://blog-app-backend-dvt6.onrender.com";
+
 export const useAuth = create((set) => ({
   currentUser: null,
   isAuthenticated: false,
   loading: false,
   error: null,
+
   login: async (userCredWithRole) => {
     const { role, ...userCredObj } = userCredWithRole;
+
     try {
-      //set loading state
       set({ loading: true, error: null });
-      //make api req
+
       let res = await axios.post(
-        "https://blog-app-backend-v0sj.onrender.com/common-api/login",
+        `${BASE_URL}/common-api/login`,
         userCredObj,
-        { withCredentials: true },
+        { withCredentials: true }
       );
+
       console.log("res is", res);
 
-      //upadte state
       set({
         loading: false,
         isAuthenticated: true,
@@ -27,7 +30,7 @@ export const useAuth = create((set) => ({
       });
     } catch (err) {
       console.log("error is ", err);
-      //set error
+
       set({
         loading: false,
         error: err.response?.data?.error || "login error",
@@ -36,18 +39,15 @@ export const useAuth = create((set) => ({
       });
     }
   },
+
   logout: async () => {
     try {
-      //set loading state
       set({ loading: true, error: null });
-      //make logout api request
-      await axios.get(
-        "https://blog-app-backend-v0sj.onrender.com/common-api/logout",
-        {
-          withCredentials: true,
-        },
-      );
-      //update state
+
+      await axios.get(`${BASE_URL}/common-api/logout`, {
+        withCredentials: true,
+      });
+
       set({
         loading: false,
         isAuthenticated: false,
@@ -55,6 +55,7 @@ export const useAuth = create((set) => ({
       });
     } catch (err) {
       console.log("error is ", err);
+
       set({
         loading: false,
         isAuthenticated: false,
@@ -62,13 +63,14 @@ export const useAuth = create((set) => ({
       });
     }
   },
+
   checkAuth: async () => {
     try {
       set({ loading: true });
 
       const res = await axios.get(
-        "https://blog-app-backend-v0sj.onrender.com/common-api/check-auth",
-        { withCredentials: true },
+        `${BASE_URL}/common-api/check-auth`,
+        { withCredentials: true }
       );
 
       set({
@@ -78,18 +80,18 @@ export const useAuth = create((set) => ({
         error: null,
       });
     } catch (err) {
-      // If user is not logged in → do nothing
       if (err.response?.status === 401) {
         set({
           currentUser: null,
           isAuthenticated: false,
           loading: false,
         });
+
         return;
       }
 
-      // other errors
       console.error("Auth check failed:", err);
+
       set({ loading: false });
     }
   },
