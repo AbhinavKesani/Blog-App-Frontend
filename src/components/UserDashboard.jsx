@@ -38,7 +38,7 @@ function UserDashboard() {
       setLoading(true);
       try {
 <<<<<<< HEAD
-        const res = await axios.get("https://blog-app-backend-dvt6.onrender.com/user-api/articles", {
+        const res = await axios.get("https://blog-app-backend-tgj0.onrender.com/user-api/articles", {
 =======
         const res = await axios.get("https://https://blog-app-backend-tgj0.onrender.com/user-api/articles", {
 >>>>>>> b419549 (frontend backend url updated)

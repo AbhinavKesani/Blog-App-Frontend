@@ -40,7 +40,7 @@ function ArticleByID() {
     commentObj.articleId = article._id;
 
     let res = await axios.put(
-      "https://blog-app-backend-dvt6.onrender.com/user-api/articles",
+      "https://blog-app-backend-tgj0.onrender.com/user-api/articles",
       commentObj,
       { withCredentials: true }
     );
@@ -65,7 +65,7 @@ function ArticleByID() {
 
       try {
         const res = await axios.get(
-          `https://blog-app-backend-dvt6.onrender.com/user-api/article/${id}`,
+          `https://blog-app-backend-tgj0.onrender.com/user-api/article/${id}`,
           { withCredentials: true },
         );
 
@@ -99,7 +99,7 @@ function ArticleByID() {
 
     try {
       const res = await axios.patch(
-        `https://blog-app-backend-dvt6.onrender.com/author-api/articles/${id}/status`,
+        `https://blog-app-backend-tgj0.onrender.com/author-api/articles/${id}/status`,
         { isArticleActive: newStatus },
         { withCredentials: true },
       );
