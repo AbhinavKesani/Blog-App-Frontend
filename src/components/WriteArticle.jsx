@@ -25,7 +25,11 @@ function WriteArticle() {
 
     try {
       await axios.post(
+<<<<<<< HEAD
         "https://blog-app-backend-dvt6.onrender.com/author-api/articles",
+=======
+        "https://https://blog-app-backend-tgj0.onrender.com/author-api/articles",
+>>>>>>> b419549 (frontend backend url updated)
         articleObj,
         { withCredentials: true }
       );
