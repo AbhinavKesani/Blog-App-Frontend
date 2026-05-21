@@ -1,151 +1,118 @@
 import { create } from "zustand";
 import axios from "axios";
 
-const BASE_URL =
-  "https://blog-app-backend-dvt6.onrender.com";
+const BASE_URL = "https://blog-app-backend-tgj0.onrender.com";
+
+/* =========================
+   LOAD FROM STORAGE (SAFE PARSE)
+========================= */
+const getStoredUser = () => {
+  try {
+    const user = localStorage.getItem("currentUser");
+    return user ? JSON.parse(user) : null;
+  } catch {
+    return null;
+  }
+};
+
+const storedUser = getStoredUser();
 
 export const useAuth = create((set) => ({
-  currentUser: null,
-  isAuthenticated: false,
+  currentUser: storedUser,
+  isAuthenticated: !!storedUser,
   loading: false,
   error: null,
 
-  // LOGIN
+  /* =========================
+     LOGIN
+  ========================= */
   login: async (userCredWithRole) => {
-    try {
-      set({
-        loading: true,
-        error: null,
-      });
+    set({ loading: true, error: null });
 
+    try {
       const res = await axios.post(
         `${BASE_URL}/common-api/login`,
         userCredWithRole,
-        {
-          withCredentials: true,
-        }
+        { withCredentials: true }
       );
 
-      console.log("Login response:", res);
+      const user = res.data.payload;
 
-      // SAVE TOKEN
-      if (res.data.token) {
-        localStorage.setItem(
-          "token",
-          res.data.token
-        );
-      }
-
-      // SAVE USER
-      if (res.data.payload) {
-        localStorage.setItem(
-          "currentUser",
-          JSON.stringify(res.data.payload)
-        );
-      }
+      localStorage.setItem("currentUser", JSON.stringify(user));
 
       set({
-        loading: false,
+        currentUser: user,
         isAuthenticated: true,
-        currentUser: res.data.payload,
+        loading: false,
+        error: null,
       });
     } catch (err) {
-      console.log("Login error:", err);
-
       set({
-        loading: false,
-        error:
-          err.response?.data?.message ||
-          "Login failed",
         currentUser: null,
         isAuthenticated: false,
+        loading: false,
+        error: err.response?.data?.message || "Login failed",
       });
     }
   },
 
-  // LOGOUT
+  /* =========================
+     LOGOUT
+  ========================= */
   logout: async () => {
+    set({ loading: true, error: null });
+
     try {
-      set({
-        loading: true,
-        error: null,
+      await axios.get(`${BASE_URL}/common-api/logout`, {
+        withCredentials: true,
       });
 
-      await axios.get(
-        `${BASE_URL}/common-api/logout`,
-        {
-          withCredentials: true,
-        }
-      );
-
-      // CLEAR STORAGE
-      localStorage.removeItem("token");
       localStorage.removeItem("currentUser");
 
       set({
-        loading: false,
-        isAuthenticated: false,
         currentUser: null,
+        isAuthenticated: false,
+        loading: false,
+        error: null,
       });
     } catch (err) {
-      console.log("Logout error:", err);
-
       set({
         loading: false,
-        error:
-          err.response?.data?.message ||
-          "Logout failed",
+        error: err.response?.data?.message || "Logout failed",
       });
     }
   },
 
-  // CHECK AUTH
+  /* =========================
+     CHECK AUTH (SERVER VERIFY)
+  ========================= */
   checkAuth: async () => {
+    set({ loading: true, error: null });
+
     try {
-      set({
-        loading: true,
-      });
-
-      const token =
-        localStorage.getItem("token");
-
-      // NO TOKEN
-      if (!token) {
-        set({
-          currentUser: null,
-          isAuthenticated: false,
-          loading: false,
-        });
-
-        return;
-      }
-
       const res = await axios.get(
         `${BASE_URL}/common-api/check-auth`,
-        {
-          withCredentials: true,
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        { withCredentials: true }
       );
 
+      const user = res.data.payload;
+
+      localStorage.setItem("currentUser", JSON.stringify(user));
+
       set({
-        currentUser: res.data.payload,
+        currentUser: user,
         isAuthenticated: true,
         loading: false,
         error: null,
       });
     } catch (err) {
-      console.log("Auth check failed:", err);
-
-      localStorage.removeItem("token");
       localStorage.removeItem("currentUser");
 
       set({
         currentUser: null,
         isAuthenticated: false,
         loading: false,
+        error: null,
       });
     }
   },

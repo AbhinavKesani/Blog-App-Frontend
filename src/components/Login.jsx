@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useAuth } from "../store/authStore";
-import { useNavigate, NavLink } from "react-router";
+import { useNavigate, NavLink } from "react-router-dom";
 
 import {
   pageBackground,
@@ -23,53 +23,39 @@ function Login() {
 
   const navigate = useNavigate();
 
-  // Zustand state
-  const isAuthenticated = useAuth(
-    (state) => state.isAuthenticated
-  );
-
-  const currentUser = useAuth(
-    (state) => state.currentUser
-  );
-
+  const isAuthenticated = useAuth((state) => state.isAuthenticated);
+  const currentUser = useAuth((state) => state.currentUser);
   const login = useAuth((state) => state.login);
 
-  // submit form
+  // submit
   const formSubmit = async (userData) => {
     try {
       await login(userData);
     } catch (err) {
-      console.log(err);
+      console.log("Login error:", err);
     }
   };
 
   // redirect after login
   useEffect(() => {
-    if (isAuthenticated && currentUser) {
-      if (currentUser.role === "USER") {
-        navigate("/user-profile");
-      } else if (currentUser.role === "AUTHOR") {
-        navigate("/author-profile");
-      } else if (currentUser.role === "ADMIN") {
-        navigate("/admin-profile");
-      }
-    }
+    if (!isAuthenticated || !currentUser) return;
+
+    const role = currentUser.role;
+
+    if (role === "USER") navigate("/user-profile");
+    else if (role === "AUTHOR") navigate("/author-profile");
+    else if (role === "ADMIN") navigate("/admin-profile");
   }, [isAuthenticated, currentUser, navigate]);
 
   return (
-    <div
-      className={`${pageBackground} flex items-center justify-center min-h-screen px-6`}
-    >
-      <form
-        onSubmit={handleSubmit(formSubmit)}
-        className={formCard}
-      >
-        {/* Title */}
+    <div className={`${pageBackground} flex items-center justify-center min-h-screen px-6`}>
+      <form onSubmit={handleSubmit(formSubmit)} className={formCard}>
+
         <h2 className="text-3xl font-bold text-center mb-8">
           Sign In
         </h2>
 
-        {/* Email */}
+        {/* EMAIL */}
         <div className={formGroup}>
           <label className={labelClass}>Email</label>
 
@@ -89,7 +75,7 @@ function Login() {
           )}
         </div>
 
-        {/* Password */}
+        {/* PASSWORD */}
         <div className={formGroup}>
           <label className={labelClass}>Password</label>
 
@@ -109,33 +95,15 @@ function Login() {
           )}
         </div>
 
-        {/* Forgot Password */}
-        <div className="text-right -mt-2 mb-5">
-          <NavLink
-            to="/forgot-password"
-            className={`${linkClass} text-sm`}
-          >
-            Forgot password?
-          </NavLink>
-        </div>
-
-        {/* Submit */}
-        <button
-          type="submit"
-          className={`${submitBtn} text-lg py-3`}
-        >
+        {/* SUBMIT */}
+        <button type="submit" className={submitBtn}>
           Sign In
         </button>
 
-        {/* Footer */}
-        <p
-          className={`${mutedText} text-center mt-6 text-base`}
-        >
+        {/* FOOTER */}
+        <p className={`${mutedText} text-center mt-6`}>
           Don't have an account?{" "}
-          <NavLink
-            to="/register"
-            className={`${linkClass} cursor-pointer`}
-          >
+          <NavLink to="/register" className={linkClass}>
             Register
           </NavLink>
         </p>

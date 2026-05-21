@@ -1,92 +1,88 @@
-import { NavLink, useNavigate } from "react-router";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../store/authStore";
 
 function Header() {
-  const isAuthenticated = useAuth((state) => state.isAuthenticated);
-  const user = useAuth((state) => state.currentUser);
-  const logout = useAuth((state) => state.logout);
-
+  const { isAuthenticated, currentUser, logout } = useAuth();
   const navigate = useNavigate();
 
+  /* =========================
+     LOGOUT HANDLER
+  ========================= */
   const handleLogout = async () => {
-    await logout();
-    navigate("/login");
-  };
-
-  // Role-based profile route
-  const getProfilePath = () => {
-    if (!user) return "/";
-
-    switch (user.role) {
-      case "AUTHOR":
-        return "/author-profile";
-      case "ADMIN":
-        return "/admin-profile";
-      default:
-        return "/user-profile";
+    try {
+      await logout();
+      navigate("/login");
+    } catch (err) {
+      console.log("Logout failed:", err);
     }
   };
 
+  /* =========================
+     ROLE BASED PROFILE ROUTE
+  ========================= */
+  const getProfilePath = () => {
+    const role = currentUser?.role;
+
+    if (role === "AUTHOR") return "/author-profile";
+    if (role === "ADMIN") return "/admin-profile";
+    return "/user-profile";
+  };
+
+  /* =========================
+     ACTIVE LINK STYLE
+  ========================= */
+  const linkClass = ({ isActive }) =>
+    isActive ? "text-blue-600 font-bold" : "text-gray-700";
+
   return (
     <nav className="flex justify-between items-center px-6 py-4 bg-gray-200 shadow-md">
-      {/* Logo */}
+      
+      {/* LOGO */}
       <NavLink to="/" className="text-2xl font-bold text-gray-800">
         MyBlog
       </NavLink>
 
-      {/* Links */}
-      <ul className="flex gap-6 text-lg font-semibold text-gray-700 items-center">
-        {/* Always visible */}
+      {/* NAV LINKS */}
+      <ul className="flex gap-6 text-lg font-semibold items-center">
+
+        {/* HOME */}
         <li>
-          <NavLink
-            to="/"
-            className={({ isActive }) => (isActive ? "text-blue-600" : "")}
-          >
+          <NavLink to="/" className={linkClass}>
             Home
           </NavLink>
         </li>
 
-        {/* Not Logged In */}
+        {/* GUEST USER */}
         {!isAuthenticated && (
           <>
             <li>
-              <NavLink
-                to="/register"
-                className={({ isActive }) => (isActive ? "text-blue-600" : "")}
-              >
+              <NavLink to="/register" className={linkClass}>
                 Register
               </NavLink>
             </li>
-
             <li>
-              <NavLink
-                to="/login"
-                className={({ isActive }) => (isActive ? "text-blue-600" : "")}
-              >
+              <NavLink to="/login" className={linkClass}>
                 Login
               </NavLink>
             </li>
           </>
         )}
 
-        {/* Logged In */}
+        {/* LOGGED IN USER */}
         {isAuthenticated && (
           <>
             <li>
-              <NavLink
-                to={getProfilePath()}
-                className={({ isActive }) => (isActive ? "text-blue-600" : "")}
-              >
+              <NavLink to={getProfilePath()} className={linkClass}>
                 Profile
               </NavLink>
             </li>
 
-            <li className="flex gap-2">
-              {user?.profileImageUrl && (
+            <li className="flex items-center gap-3">
+              {currentUser?.profileImageUrl && (
                 <img
-                  src={user.profileImageUrl}
-                  className="rounded-2xl w-13"
-                  alt="img"
+                  src={currentUser.profileImageUrl}
+                  className="rounded-full w-10 h-10 object-cover"
+                  alt="profile"
                 />
               )}
 

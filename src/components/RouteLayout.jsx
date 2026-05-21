@@ -1,18 +1,35 @@
-import React from 'react'
-import Header from './Header'
-import Footer from './Footer'
-import { Outlet } from 'react-router'
+import React from "react";
+import Header from "./Header";
+import Footer from "./Footer";
+import { Outlet } from "react-router-dom";
 
 function RouteLayout() {
   return (
-    <div>
-    <Header/>
-    <div>
-        <Outlet/>
+    <div style={styles.container}>
+      {/* HEADER */}
+      <Header />
+
+      {/* MAIN CONTENT */}
+      <main style={styles.main}>
+        <Outlet />
+      </main>
+
+      {/* FOOTER */}
+      <Footer />
     </div>
-    <Footer/>
-    </div>
-  )
+  );
 }
 
-export default RouteLayout
+const styles = {
+  container: {
+    display: "flex",
+    flexDirection: "column",
+    minHeight: "100vh",
+  },
+  main: {
+    flex: 1,
+    padding: "20px",
+  },
+};
+
+export default RouteLayout;

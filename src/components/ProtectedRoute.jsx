@@ -1,25 +1,39 @@
-import { useAuth } from '../store/authStore';
-import { Navigate } from 'react-router';
+import { useAuth } from "../store/authStore";
+import { Navigate } from "react-router-dom";
 
 function ProtectedRoute({ children, allowedRoles }) {
   const { currentUser, isAuthenticated, loading } = useAuth();
 
-  //  Loading state
+  /* =========================
+     LOADING STATE
+  ========================= */
   if (loading) {
-    return <p>Loading...</p>;
+    return (
+      <div style={{ textAlign: "center", marginTop: "40px" }}>
+        Checking authentication...
+      </div>
+    );
   }
 
-  //  Not authenticated
+  /* =========================
+     NOT LOGGED IN
+  ========================= */
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
 
-  //  Role not allowed
-  if (allowedRoles && !allowedRoles.includes(currentUser?.role)) {
+  /* =========================
+     ROLE BASED ACCESS CONTROL
+  ========================= */
+  const userRole = currentUser?.role;
+
+  if (allowedRoles?.length && !allowedRoles.includes(userRole)) {
     return <Navigate to="/unauthorized" replace />;
   }
 
-  //  Allowed
+  /* =========================
+     ACCESS GRANTED
+  ========================= */
   return children;
 }
 
