@@ -20,7 +20,6 @@ import {
   errorClass,
   inputClass,
 } from "../styles/common.js";
-import Register from "./Register.jsx";
 
 function ArticleByID() {
   const { id } = useParams();
@@ -34,28 +33,27 @@ function ArticleByID() {
   const [error, setError] = useState(null);
 
   const { register, handleSubmit } = useForm();
+
   const commentForm = async (commentObj) => {
-  try {
-    // add articleId
-    commentObj.articleId = article._id;
+    try {
+      commentObj.articleId = article._id;
 
-    let res = await axios.put(
-      "https://blog-app-backend-tgj0.onrender.com/author-api/articles",
-      commentObj,
-      { withCredentials: true }
-    );
+      let res = await axios.put(
+        `https://blog-app-backend-tgj0.onrender.com/user-api/comment/${article._id}`,
+        commentObj,
+        { withCredentials: true }
+      );
 
-    if (res.status === 200) {
-      toast.success(res.data.message);
+      if (res.status === 200) {
+        toast.success(res.data.message);
 
-      // update UI instantly
-      setArticle(res.data.payload);
+        setArticle(res.data.payload);
+      }
+    } catch (err) {
+      console.log(err);
+      toast.error("Failed to add comment");
     }
-  } catch (err) {
-    console.log(err);
-    toast.error("Failed to add comment");
-  }
-};
+  };
 
   useEffect(() => {
     if (article) return;
@@ -66,7 +64,7 @@ function ArticleByID() {
       try {
         const res = await axios.get(
           `https://blog-app-backend-tgj0.onrender.com/user-api/article/${id}`,
-          { withCredentials: true },
+          { withCredentials: true }
         );
 
         setArticle(res.data.payload);
@@ -88,34 +86,30 @@ function ArticleByID() {
     });
   };
 
-  // delete & restore article
   const toggleArticleStatus = async () => {
     const newStatus = !article.isArticleActive;
 
     const confirmMsg = newStatus
       ? "Restore this article?"
       : "Delete this article?";
+
     if (!window.confirm(confirmMsg)) return;
 
     try {
       const res = await axios.patch(
         `https://blog-app-backend-tgj0.onrender.com/author-api/articles/${id}/status`,
         { isArticleActive: newStatus },
-        { withCredentials: true },
+        { withCredentials: true }
       );
-
-      console.log("SUCCESS:", res.data);
 
       setArticle(res.data.payload);
 
       toast.success(res.data.message);
     } catch (err) {
-      console.log("ERROR:", err.response);
-
       const msg = err.response?.data?.message;
 
       if (err.response?.status === 400) {
-        toast(msg); // already deleted/active case
+        toast(msg);
       } else {
         setError(msg || "Operation failed");
       }
@@ -123,20 +117,34 @@ function ArticleByID() {
   };
 
   const editArticle = (articleObj) => {
-    navigate(`/edit-article/${article._id}`, { state: articleObj });
+    navigate(`/edit-article/${article._id}`, {
+      state: articleObj,
+    });
   };
 
-  if (loading) return <p className={loadingClass}>Loading article...</p>;
-  if (error) return <p className={errorClass}>{error}</p>;
-  if (!article) return null;
+  if (loading) {
+    return <p className={loadingClass}>Loading article...</p>;
+  }
+
+  if (error) {
+    return <p className={errorClass}>{error}</p>;
+  }
+
+  if (!article) {
+    return null;
+  }
 
   return (
     <div className={articlePageWrapper}>
       {/* Header */}
       <div className={articleHeader}>
-        <span className={articleCategory}>{article.category}</span>
+        <span className={articleCategory}>
+          {article.category}
+        </span>
 
-        <h1 className={`${articleMainTitle} uppercase`}>{article.title}</h1>
+        <h1 className={`${articleMainTitle} uppercase`}>
+          {article.title}
+        </h1>
 
         <div className={articleAuthorRow}>
           <div className={authorInfo}>
@@ -148,16 +156,24 @@ function ArticleByID() {
       </div>
 
       {/* Content */}
-      <div className={articleContent}>{article.content}</div>
+      <div className={articleContent}>
+        {article.content}
+      </div>
 
       {/* AUTHOR actions */}
       {user?.role === "AUTHOR" && (
         <div className={articleActions}>
-          <button className={editBtn} onClick={() => editArticle(article)}>
+          <button
+            className={editBtn}
+            onClick={() => editArticle(article)}
+          >
             Edit
           </button>
 
-          <button className={deleteBtn} onClick={toggleArticleStatus}>
+          <button
+            className={deleteBtn}
+            onClick={toggleArticleStatus}
+          >
             {article.isArticleActive ? "Delete" : "Restore"}
           </button>
         </div>
@@ -168,39 +184,40 @@ function ArticleByID() {
         Last updated: {formatDate(article.updatedAt)}
       </div>
 
-      {/* form to add comment if role is USER */}
-      {user?.role == "USER" && (
+      {/* USER comment form */}
+      {user?.role === "USER" && (
         <div className="my-3">
-          <h3 className="my-3">write comment</h3>
+          <h3 className="my-3">Write Comment</h3>
+
           <form onSubmit={handleSubmit(commentForm)}>
             <input
               type="text"
               {...register("comment")}
               className={inputClass}
-              placeholder="write comment.."
+              placeholder="Write comment..."
             />
+
             <button
               type="submit"
               className="px-2 py-1 bg-blue-500 rounded m-2 text-white hover:bg-green-400"
             >
-              post
+              Post
             </button>
           </form>
         </div>
       )}
 
-      
-
-      {/* comments */}
+      {/* Comments */}
       <div>
-             {article.comments.map((comment) => (
-        <div className=" rounded-2xl mt-4">
-          <p className="uppercase font-bold mb-3">
-          {comment.user?.email}
-          </p>
-          <p>{comment.comment}</p>
-        </div>
-      ))}
+        {article.comments?.map((comment, index) => (
+          <div key={index} className="rounded-2xl mt-4">
+            <p className="uppercase font-bold mb-3">
+              {comment.user?.email}
+            </p>
+
+            <p>{comment.comment}</p>
+          </div>
+        ))}
       </div>
     </div>
   );
