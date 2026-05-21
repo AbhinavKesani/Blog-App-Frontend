@@ -32,7 +32,7 @@ function UserDashboard() {
 
       try {
         const res = await axios.get(
-          "https://blog-app-backend-tgj0.onrender.com/user-api/articles",
+          "https://blog-app-backend-tgj0.onrender.com/author-api/articles",
           {
             withCredentials: true,
           }

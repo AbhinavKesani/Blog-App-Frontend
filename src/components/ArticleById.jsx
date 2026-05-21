@@ -40,7 +40,7 @@ function ArticleByID() {
     commentObj.articleId = article._id;
 
     let res = await axios.put(
-      "https://blog-app-backend-tgj0.onrender.com/user-api/articles",
+      "https://blog-app-backend-tgj0.onrender.com/author-api/articles",
       commentObj,
       { withCredentials: true }
     );
