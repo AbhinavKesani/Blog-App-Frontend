@@ -13,7 +13,6 @@ import {
   articleBody,
   timestampClass,
   ghostBtn,
-  primaryBtn,
   loadingClass,
   errorClass,
 } from "../styles/common";
@@ -26,24 +25,18 @@ function UserDashboard() {
   const [error, setError] = useState(null);
   const [articles, setArticles] = useState([]);
 
-  const onLogout = async () => {
-    await logout();
-    toast.success("Logged out successfully");
-    navigate("/login");
-  };
-
   // Fetch articles
   useEffect(() => {
     const read = async () => {
       setLoading(true);
+
       try {
-<<<<<<< HEAD
-        const res = await axios.get("https://blog-app-backend-tgj0.onrender.com/user-api/articles", {
-=======
-        const res = await axios.get("https://https://blog-app-backend-tgj0.onrender.com/user-api/articles", {
->>>>>>> b419549 (frontend backend url updated)
-          withCredentials: true,
-        });
+        const res = await axios.get(
+          "https://blog-app-backend-tgj0.onrender.com/user-api/articles",
+          {
+            withCredentials: true,
+          }
+        );
 
         setArticles(res.data.payload);
       } catch (err) {
@@ -56,18 +49,18 @@ function UserDashboard() {
     read();
   }, []);
 
-  //  Safe date format
+  // Safe date format
   const formatDate = (date) => {
     if (!date) return "No date";
 
     return new Date(date).toLocaleDateString("en-IN");
   };
 
-  //  Safe author name
+  // Safe author name
   const getAuthorName = (author) => {
     if (!author) return "Unknown Author";
 
-    if (typeof author === "string") return "Author"; // only ID case
+    if (typeof author === "string") return "Author";
 
     return author.firstName || "Author";
   };
@@ -93,7 +86,6 @@ function UserDashboard() {
           {articles.map((articleObj) => (
             <div key={articleObj?._id} className={articleCardClass}>
               <div className="flex flex-col h-full">
-                {/* Top */}
                 <div>
                   <p className={articleTitle}>
                     {articleObj?.title || "Untitled"}
@@ -105,18 +97,15 @@ function UserDashboard() {
                       : "No content available"}
                   </p>
 
-                  {/*  Author */}
                   <p className="text-sm text-gray-500 mt-2">
                     {getAuthorName(articleObj?.author)}
                   </p>
 
-                  {/*  Date */}
                   <p className={timestampClass}>
                     {formatDate(articleObj?.createdAt)}
                   </p>
                 </div>
 
-                {/* Button */}
                 <button
                   onClick={() => navigateToArticle(articleObj)}
                   className={`${ghostBtn} mt-auto pt-4`}
