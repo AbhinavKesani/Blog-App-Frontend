@@ -25,11 +25,7 @@ function WriteArticle() {
 
     try {
       await axios.post(
-<<<<<<< HEAD
         "https://blog-app-backend-tgj0.onrender.com/author-api/articles",
-=======
-        "https://https://blog-app-backend-tgj0.onrender.com/author-api/articles",
->>>>>>> b419549 (frontend backend url updated)
         articleObj,
         { withCredentials: true }
       );
@@ -38,7 +34,6 @@ function WriteArticle() {
 
       reset();
       navigate("/author-profile/articles");
-
     } catch (err) {
       toast.error(err.response?.data?.error || "Failed to publish article");
     } finally {
@@ -48,7 +43,6 @@ function WriteArticle() {
 
   return (
     <div className="max-w-2xl mx-auto mt-10 p-6 bg-white shadow-lg rounded-xl">
-      
       <h2 className="text-2xl font-bold mb-6 text-center">
         Write New Article
       </h2>
@@ -58,6 +52,7 @@ function WriteArticle() {
         {/* Title */}
         <div>
           <label className="block font-semibold mb-1">Title</label>
+
           <input
             type="text"
             placeholder="Enter article title"
@@ -70,14 +65,18 @@ function WriteArticle() {
               },
             })}
           />
+
           {errors.title && (
-            <p className="text-red-500 text-sm">{errors.title.message}</p>
+            <p className="text-red-500 text-sm">
+              {errors.title.message}
+            </p>
           )}
         </div>
 
         {/* Category */}
         <div>
           <label className="block font-semibold mb-1">Category</label>
+
           <select
             className="w-full border px-3 py-2 rounded focus:outline-none"
             {...register("category", {
@@ -90,14 +89,18 @@ function WriteArticle() {
             <option value="ai">AI</option>
             <option value="web-development">Web Development</option>
           </select>
+
           {errors.category && (
-            <p className="text-red-500 text-sm">{errors.category.message}</p>
+            <p className="text-red-500 text-sm">
+              {errors.category.message}
+            </p>
           )}
         </div>
 
         {/* Content */}
         <div>
           <label className="block font-semibold mb-1">Content</label>
+
           <textarea
             rows="8"
             placeholder="Write your article content..."
@@ -110,8 +113,11 @@ function WriteArticle() {
               },
             })}
           />
+
           {errors.content && (
-            <p className="text-red-500 text-sm">{errors.content.message}</p>
+            <p className="text-red-500 text-sm">
+              {errors.content.message}
+            </p>
           )}
         </div>
 
